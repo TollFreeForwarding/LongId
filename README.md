@@ -1,6 +1,6 @@
 # LongId - simpler and smaller than Snowflake / Snowizard
 
-Super simple and easy to use ID generator for Java.   
+Simple Java UUID generator.
 
 Created in response to complexity of Snowflake and Snowizard, it's only a single class.
 
@@ -12,7 +12,7 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 
 - thread-safe
   
-- Single class  (about 150 lines of code)
+- Single class
 
 - 8byte Java 'long' result, perfect for primary key
 
