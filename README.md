@@ -55,7 +55,7 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
   - Uniqueness is guaranteed within a single server and multi-server network when serverId is used
 
 - 256,000 ID's per second is theoretical, really it's a max of 256 per millisecond, when exceeded will sleep for 1ms
-  - during multi-threaded testing on quad-core machine, we had difficulty hitting that limit
+  - during multi-threaded testing on quad-core machine, we rarely exceeded 256 per millisecond
 
 - Multi-server / Multi-datacenter may result in SQL inserts not exactly at the bottom of the table, depending on delay of insertion and quantity of servers.  But it will be in the bottom pages, and almost guaranteed insert into pages that are in memory.
 
