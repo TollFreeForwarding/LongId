@@ -49,5 +49,6 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 
 **Disadvantages:**
 - It's not technically a UUID generator as it's not Universal, that would require 128bits/16bytes or more
-- 256,000 ID's per second is theoretical, really it's a max of 255 per millisecond, at which point it will sleep for 1ms.
+- 256,000 ID's per second is theoretical, really it's a max of 256 per millisecond, when exceeded will sleep for 1ms.
+  - during multi-threaded testing on quad-core machine, we had difficulty hitting that limit
 - If you need more than 4096 servers, you will need to adjust the code and lose either max_servers or timeEpoch
