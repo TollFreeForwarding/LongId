@@ -1,6 +1,8 @@
 # LongId - simpler and smaller than Snowflake / Snowizard
 
-Super simple and easy to use ID generator for Java.  This was created in response to Snowflake and Snowizard, it's only a single class.
+Super simple and easy to use ID generator for Java.   
+
+Created in response to Snowflake and Snowizard, it's only a single class.
 
 **Advantages:**
 
