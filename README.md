@@ -7,11 +7,12 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 **Advantages:**
 
 - SQL inserts will always be at bottom of table when used as primary key
-  - thread-safe
   - ID always larger than previous
   - algorithm: currentTimeMillis & intraMillCounter & serverId
 
-- Single class
+- thread-safe
+  
+- Single class  (about 150 lines of code)
 
 - 8byte Java 'long' result, perfect for primary key
 
