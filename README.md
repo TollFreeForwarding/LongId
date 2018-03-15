@@ -20,7 +20,7 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 
   - Does not require server coordination
 
-  - Instantiate with serverId (0-4096) for 100% assurance of uniqueness
+  - Instantiate with serverId (0-4095) for 100% assurance of uniqueness
 
 - 256,000 unique IDs per second per server
 
@@ -46,3 +46,8 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
   
   idGenerator.getNewId();
 ```
+
+**Disadvantages:**
+- It's not technically a UUID generator as it's not Universal, that would require 128bits/16bytes or more
+- 256,000 ID's per second is theoretical, really it's a max of 255 per millisecond, at which point it will sleep for 1ms.
+- If you need more than 4096 servers, you will need to adjust the code and lose either max_servers or timeEpoch
