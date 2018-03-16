@@ -28,9 +28,9 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 
 - Good for years 1970 to 2557
 
-- generated longId also functions as timestamp -> getDate(longId) returns currentTimeMillis when longId was generated
+- longId contains timestamp -> getDate(longId) 
 
-- generated longId contains serverId -> getServerId(longId) returns serverId 
+- longId contains serverId  -> getServerId(longId) 
 
 
 **Installation**
