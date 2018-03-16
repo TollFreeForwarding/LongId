@@ -45,7 +45,7 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 
 **Use Example: Multi Server**
 ```
-  int serverId = 99;
+  int serverId = 4095;
   LongId longId = new LongId(serverId)
   longId.getNewId();
 ```
