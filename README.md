@@ -26,7 +26,7 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 
 - 256,000 unique IDs per second per server
 
-- Good for year 1970 to 2557
+- Good for years 1970 to 2557
 
 
 **Installation**
