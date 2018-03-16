@@ -35,7 +35,7 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 
 - copy the source into your code
 - or
-- compile 'com.communicate:longid:1.0'
+- compile 'com.communicate:longid:1.1'
 
 **Use Example: Single Server**
 ```
