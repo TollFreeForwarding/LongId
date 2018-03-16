@@ -10,9 +10,9 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 
 - SQL inserts will always be at bottom of table when used as primary key
   - ID always larger than previous
-  - algorithm: currentTimeMillis & intraMillCounter & serverId
+  - algorithm: currentTimeMillis & intraMilliCounter & serverId
 
-- thread-safe
+- Thread-safe
   
 - Single class
 
@@ -26,7 +26,7 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 
 - 256,000 unique IDs per second per server
 
-- Good from 1970 to 2557
+- Good for year 1970 to 2557
 
 
 **Installation**
