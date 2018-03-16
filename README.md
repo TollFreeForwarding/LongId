@@ -1,6 +1,6 @@
 # LongId - better than Snowflake / Snowizard
 
-Simple Java UUID generator.
+Smart and Simple Java UUID generator.
 
 Replacement for auto-incrementing ID, especially in multi-server multi-datacenter environment.
 
@@ -27,6 +27,10 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 - 256,000 unique IDs per second per server
 
 - Good for years 1970 to 2557
+
+- generated longId also functions as timestamp -> getDate(longId) returns currentTimeMillis when longId was generated
+
+- generated longId contains serverId -> getServerId(longId) returns serverId 
 
 
 **Installation**
