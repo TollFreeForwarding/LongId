@@ -1,3 +1,5 @@
+package com.communicate;
+
 /*
  * MIT License
  *
@@ -21,8 +23,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package com.communicate;
 
 import java.util.Date;
 
@@ -56,35 +56,37 @@ import java.util.Date;
  * </ul>
  *
  * @author      Communicate.com kv@communicate.com
- * @version     1.0
+ * @version     1.1
  * @since       1.0
  */
 public class LongId {
 
     // How many hex digits we use for each component of the ID
-    private static final int MILLIS_HEX_DIGITS = 11;
+    private static final int MILLIS_HEX_DIGITS  = 11;
     private static final int COUNTER_HEX_DIGITS = 2;
-    private static final int SERVER_HEX_DIGITS = 3;
+    private static final int SERVER_HEX_DIGITS  = 3;
 
     private static final int COUNTER_MAX = 255;
-    private static final int SERVER_MAX = 4095;
+    private static final int SERVER_MAX  = 4095;
     // For padding
     private static final String ZEROES = "00000000000";
 
     // State variables, used to ensure unique IDs when called within the same millisecond.
     // Shared across instances, so even if you create two objects with the same server, the IDs will still be unique
-    private static long millisPrevious = 0;
-    private static long counterWithinThisMilli = 0;
+    private long millisPrevious = 0;
+    private long counterWithinThisMilli = 0;
 
 
     // Optional server ID will be 0. Can be set by creating a new LongId(serverId);
     private final long serverId;
+    private final String serverIdAsHex;
 
     /**
      * Create a new instance and set the server Id to 0.
      */
-    public LongId() {
+    private LongId() {
         serverId = 0;
+        serverIdAsHex = getServerAsHex(serverId);
     }
 
     /**
@@ -97,6 +99,18 @@ public class LongId {
             throw new IllegalArgumentException("Server Id must be in the range 0-" + SERVER_MAX);
         }
         serverId = setServerId;
+
+        // convert serverId to hex, padded with zeroes as needed.
+        serverIdAsHex = getServerAsHex(serverId);
+    }
+
+    /**
+     * Convert int serverId to hex value to store in class instance variable
+     *
+     * @param  serverId Numeric ID used to create hex value
+     */
+    private static String getServerAsHex(long serverId) {
+        return ZEROES.substring(0, SERVER_HEX_DIGITS-Long.toHexString(serverId).length() ) + Long.toHexString(serverId);
     }
 
     /**
@@ -105,7 +119,7 @@ public class LongId {
      * @return A unique ID suitable for use as a database key
      */
     public long getNewId() {
-        return getNewIdStatic(serverId);
+        return getNewId(serverId);
     }
 
     /**
@@ -117,7 +131,7 @@ public class LongId {
      * @param serverId The server ID of the instance calling this method.
      * @return A unique ID suitable for use as a database key
      */
-    private static synchronized long getNewIdStatic(long serverId) {
+    private synchronized long getNewId(long serverId) {
         // store the current millis since epoch
         long millisCurrent = System.currentTimeMillis();
 
@@ -134,12 +148,11 @@ public class LongId {
                 // sleep throws a checked exception, so we have to deal with it here or else kick it upstairs and force the caller to deal with it.
                 throw new RuntimeException(e);
             }
-            return getNewIdStatic(serverId); // recursive call
+            return getNewId(serverId); // recursive call
         }
         // if within the same milli, increment counter
-        else {
+        else
             counterWithinThisMilli++;
-        }
 
         // store counter
         millisPrevious = millisCurrent;
@@ -151,12 +164,8 @@ public class LongId {
         String counterAsHex = Long.toHexString(counterWithinThisMilli);
         counterAsHex = ZEROES.substring(0,COUNTER_HEX_DIGITS-counterAsHex.length()) + counterAsHex;
 
-        // convert serverId to hex, padded with zeroes as needed.
-        String serverAsHex = Long.toHexString(serverId);
-        serverAsHex = ZEROES.substring(0,SERVER_HEX_DIGITS-serverAsHex.length()) + serverAsHex;
-
         // concatenate them together and decode to Long
-        return Long.decode("0x" + millisAsHex + counterAsHex + serverAsHex);
+        return Long.decode("0x" + millisAsHex + counterAsHex + serverIdAsHex);
     }
 
     /**
@@ -201,3 +210,4 @@ public class LongId {
         return Long.decode("0x" + hexInput.substring(hexInput.length()-(COUNTER_HEX_DIGITS+SERVER_HEX_DIGITS),hexInput.length()-SERVER_HEX_DIGITS) );
     }
 }
+
