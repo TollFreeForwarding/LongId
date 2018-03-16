@@ -49,14 +49,14 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
   idGenerator.getNewId();
 ```
 
-**Disadvantages:**
+**Disclosures:**
 
-- Not technically a UUID generator as it's not Universal, that would require 128bits/16bytes or more
-  - Uniqueness is guaranteed within a single server and multi-server network when serverId is used
+- Not technically a UUID generator as it's not Universal, that would require 16 bytes instad of 8
+  - Uniqueness __is guaranteed__ within a single server and multi-server network when serverId is used
 
 - 256,000 ID's per second is theoretical, really it's a max of 256 per millisecond, when exceeded will sleep for 1ms
   - during multi-threaded testing on quad-core machine, we rarely exceeded 256 per millisecond
 
 - Multi-server / Multi-datacenter may result in SQL inserts not exactly at the bottom of the table, depending on delay of insertion and quantity of servers.  But it will be in the bottom pages, and almost guaranteed insert into pages that are in memory.
 
-- If you need more than 4096 servers, you will need to adjust the code and lose either max_servers or timeEpoch
+- If you need more than 4096 servers, you must adjust the code to decrease max_servers or timeEpoch to stay within 8byte/long
