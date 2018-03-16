@@ -62,4 +62,4 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 
 - Multi-server / Multi-datacenter may result in SQL inserts not exactly at the bottom of the table, depending on delay of insertion and quantity of servers.  But it will be in the bottom pages, and almost guaranteed insert into pages that are in memory.
 
-- If you need more than 4096 servers, you must adjust the code to decrease max_servers or timeEpoch to stay within 8byte/long
+- If you need more than 4096 servers, you must adjust the code to decrease timeEpoch to stay within 8byte/long
