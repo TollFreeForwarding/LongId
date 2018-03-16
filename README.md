@@ -1,4 +1,4 @@
-# LongId - Smart and Simple Java UUID generator.
+# LongId - Simple yet smart Java UUID generator
 
 Replacement for auto-incrementing ID, especially in multi-server multi-datacenter environment.
 
