@@ -1,6 +1,4 @@
-# LongId - better than Snowflake / Snowizard
-
-Smart and Simple Java UUID generator.
+# LongId - Smart and Simple Java UUID generator.
 
 Replacement for auto-incrementing ID, especially in multi-server multi-datacenter environment.
 
