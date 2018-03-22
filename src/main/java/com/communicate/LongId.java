@@ -43,7 +43,7 @@ import java.util.Date;
  * </p>
  *
  * <ul>
- *   <li>LongId lid = new LongId() - creates an instance to generate IDs with the embedded server ID 0.
+ *   <li>LongId lid = new LongId()    - creates an instance to generate IDs with the embedded server ID 0.
  *   <li>LongId lid = new LongId(123) - creates an instance to generate IDs with the embedded server ID 123.
  *   <li>lid.getNewId() - generates IDs with the embedded server ID on the instance.
  * </ul>
@@ -56,56 +56,48 @@ import java.util.Date;
  * </ul>
  *
  * @author      Communicate.com kv@communicate.com
- * @version     1.0
+ * @version     1.1
  * @since       1.0
  */
 public class LongId {
 
     // How many hex digits we use for each component of the ID
-    private static final int MILLIS_HEX_DIGITS = 11;
+    private static final int MILLIS_HEX_DIGITS  = 11;
     private static final int COUNTER_HEX_DIGITS = 2;
-    private static final int SERVER_HEX_DIGITS = 3;
+    private static final int SERVER_HEX_DIGITS  = 3;
 
     private static final int COUNTER_MAX = 255;
-    private static final int SERVER_MAX = 4095;
+    private static final int SERVER_MAX  = 4095;
     // For padding
     private static final String ZEROES = "00000000000";
 
     // State variables, used to ensure unique IDs when called within the same millisecond.
     // Shared across instances, so even if you create two objects with the same server, the IDs will still be unique
-    private static long millisPrevious = 0;
-    private static long counterWithinThisMilli = 0;
-
+    private long millisPrevious = 0;
+    private long counterWithinThisMilli = 0;
 
     // Optional server ID will be 0. Can be set by creating a new LongId(serverId);
-    private final long serverId;
+    private final String serverIdAsHex;
 
     /**
-     * Create a new instance and set the server Id to 0.
+     * Create a new instance with default serverId: 0.
      */
     public LongId() {
-        serverId = 0;
+        this(0);
     }
 
     /**
      * Create a new instance for a specific server/app instance. Ensures each instance generates a unique set of IDs.
      *
-     * @param  setServerId Numeric ID indicating which server is generating this ID.
+     * @param  serverId Numeric ID indicating which server is generating this ID.
      */
-    public LongId(long setServerId) {
-        if (setServerId > SERVER_MAX || setServerId < 0) {
+    public LongId(long serverId) {
+        if (serverId > SERVER_MAX || serverId < 0)
             throw new IllegalArgumentException("Server Id must be in the range 0-" + SERVER_MAX);
-        }
-        serverId = setServerId;
-    }
 
-    /**
-     * Generate a new ID with the given instance's server ID
-     *
-     * @return A unique ID suitable for use as a database key
-     */
-    public long getNewId() {
-        return getNewIdStatic(serverId);
+        // convert serverId to hex, padded with zeroes as needed.
+        String asHex = Long.toHexString(serverId);
+        serverIdAsHex = ZEROES.substring(0, SERVER_HEX_DIGITS-asHex.length() ) + asHex;
     }
 
     /**
@@ -114,10 +106,9 @@ public class LongId {
      *
      * If we hit the counter limit within a millisecond, we sleep for a millisecond and start over.
      *
-     * @param serverId The server ID of the instance calling this method.
      * @return A unique ID suitable for use as a database key
      */
-    private static synchronized long getNewIdStatic(long serverId) {
+    public synchronized long getNewId() {
         // store the current millis since epoch
         long millisCurrent = System.currentTimeMillis();
 
@@ -128,18 +119,13 @@ public class LongId {
         }
         // if counter is maxed out, sleep 1ms, then call self recursively
         else if (counterWithinThisMilli >= COUNTER_MAX) {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                // sleep throws a checked exception, so we have to deal with it here or else kick it upstairs and force the caller to deal with it.
-                throw new RuntimeException(e);
-            }
-            return getNewIdStatic(serverId); // recursive call
+            try { Thread.sleep(1); }
+            // sleep throws a checked exception, so we have to deal with it here or else kick it upstairs and force the caller to deal with it.
+            catch (InterruptedException e) { throw new RuntimeException(e); }
+            return getNewId(); // recursive call
         }
         // if within the same milli, increment counter
-        else {
-            counterWithinThisMilli++;
-        }
+        else counterWithinThisMilli++;
 
         // store counter
         millisPrevious = millisCurrent;
@@ -151,12 +137,8 @@ public class LongId {
         String counterAsHex = Long.toHexString(counterWithinThisMilli);
         counterAsHex = ZEROES.substring(0,COUNTER_HEX_DIGITS-counterAsHex.length()) + counterAsHex;
 
-        // convert serverId to hex, padded with zeroes as needed.
-        String serverAsHex = Long.toHexString(serverId);
-        serverAsHex = ZEROES.substring(0,SERVER_HEX_DIGITS-serverAsHex.length()) + serverAsHex;
-
         // concatenate them together and decode to Long
-        return Long.decode("0x" + millisAsHex + counterAsHex + serverAsHex);
+        return Long.decode("0x" + millisAsHex + counterAsHex + serverIdAsHex);
     }
 
     /**
@@ -188,7 +170,7 @@ public class LongId {
     }
 
     /**
-     * Get the same-millisecond counter from a LongId. Not userful except for debugging.
+     * Get the same-millisecond counter from a LongId. Not useful except for debugging.
      *
      * @param  longId The numeric form of a LongId generated with this class. Does not have to be generated by this instance.
      * @return Numeric counter

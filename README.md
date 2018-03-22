@@ -35,20 +35,19 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
 
 - copy the source into your code
 - or
-- compile 'com.communicate:longid:1.0'
+- compile 'com.communicate:longid:1.1'
 
-**Use Example: Prototype**
+**Use Example: Single Server**
 ```
-  int serverId = 0;  
-  LongId.getNewId(serverId);
+  LongId longId = new LongId()
+  longId.getNewId();
 ```
 
-**Use Example: Instantiated**
+**Use Example: Multi Server**
 ```
-  int serverId = 0;
-  LongId idGenerator = new LongId(serverId);
-  
-  idGenerator.getNewId();
+  int serverId = 4095;
+  LongId longId = new LongId(serverId)
+  longId.getNewId();
 ```
 
 **Disclosures:**
