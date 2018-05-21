@@ -50,6 +50,29 @@ Created in response to complexity of Snowflake and Snowizard, it's only a single
   longId.getNewId();
 ```
 
+
+**Use Example: Grails GORM ID Generator**
+
+You can use LongId with GORM to create a new LongId for each record as it's created. To do so you'll need to create a Groovy IdentifierGenerator and use it in the object mapping. You can store the static LongId in a service or another object if you prefer.
+
+```
+class LongIdGenerator implements IdentifierGenerator {
+    static private LongId longId = new LongId()
+    Serializable generate(SessionImplementor session, Object object) {
+        return longId.getNewId()
+    }
+}
+```
+
+And then in your mapping for the Grails class:
+
+```
+    static mapping = {
+        id generator: 'com.LongIdGenerator', name: 'id', unique: 'true'
+    }
+```
+
+
 **Disclosures:**
 
 - Not technically a UUID generator as it's not Universal, that would require 16 instead of 8 bytes
