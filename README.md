@@ -68,7 +68,7 @@ And then in your mapping for the Grails class:
 
 ```
     static mapping = {
-        id generator: 'com.LongIdGenerator', name: 'id', unique: 'true'
+        id generator: 'com.LongIdGenerator'
     }
 ```
 
